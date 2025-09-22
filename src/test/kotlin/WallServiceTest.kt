@@ -10,12 +10,47 @@ import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before
 import org.example.Attachment.*
+import org.example.Comment
+import org.example.PostNotFoundException
 
 class WallServiceObjectTest {
 
     @Before
     fun setUp() {
         WallService.clear()
+    }
+
+    @Test
+    fun createComment_shouldAddCommentToCorrectPost() {
+        val post = WallService.add(Post(
+            text = "Тестовый пост для комментария",
+            ownerId = 123
+        ))
+
+        val comment = Comment(
+            fromId = 456,
+            date = 1672531200, // Unixtime
+            text = "Это тестовый комментарий к посту"
+        )
+
+        val result = WallService.createComment(post.id, comment)
+
+        assertNotEquals(0, result.id) // ID должен быть назначен
+        assertEquals("Это тестовый комментарий к посту", result.text)
+        assertEquals(456, result.fromId)
+        assertEquals(1672531200, result.date)
+
+    }
+
+    @Test(expected = PostNotFoundException::class)
+    fun createComment_shouldThrowExceptionWhenPostNotFound() {
+        // Arrange - комментарий для несуществующего поста
+        val comment = Comment(
+            fromId = 789,
+            date = 1672531300,
+            text = "Комментарий к несуществующему посту"
+        )
+        WallService.createComment(999, comment) // Поста с ID 999 не существует
     }
 
     @Test
