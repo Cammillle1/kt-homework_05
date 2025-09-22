@@ -47,6 +47,8 @@ object WallService {
 
     fun clear() {
         posts.clear()
+        comments.clear()
         nextId = 1
+        nextCommentId = 1
     }
 }
