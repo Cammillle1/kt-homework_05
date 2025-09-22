@@ -15,5 +15,6 @@ data class Post(
     val likes: Likes = Likes(),
     val reposts: Reposts = Reposts(),
     val views: Views? = null,
-    val postType: String = "post"
+    val postType: String = "post",
+    val attachments: List<Attachment> = emptyList()
 )
